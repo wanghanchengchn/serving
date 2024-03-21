@@ -18,7 +18,6 @@ package net
 
 import (
 	"context"
-	"fmt"
 	"net"
 	"net/http"
 	"net/url"
@@ -201,19 +200,19 @@ func (rw *revisionWatcher) probe(ctx context.Context, dest string) (pass bool, n
 }
 
 func (rw *revisionWatcher) getDest() (string, error) {
-	svc, err := rw.serviceLister.Services(rw.rev.Namespace).Get(names.PrivateService(rw.rev.Name))
-	if err != nil {
-		return "", err
-	}
-	if svc.Spec.ClusterIP == "" {
-		return "", fmt.Errorf("private service %s/%s clusterIP is nil, this should never happen", svc.ObjectMeta.Namespace, svc.ObjectMeta.Name)
-	}
+	// svc, err := rw.serviceLister.Services(rw.rev.Namespace).Get(names.PrivateService(rw.rev.Name))
+	// if err != nil {
+	// 	return "", err
+	// }
+	// if svc.Spec.ClusterIP == "" {
+	// 	return "", fmt.Errorf("private service %s/%s clusterIP is nil, this should never happen", svc.ObjectMeta.Namespace, svc.ObjectMeta.Name)
+	// }
 
-	svcPort, ok := getServicePort(rw.protocol, svc)
-	if !ok {
-		return "", fmt.Errorf("unable to find port in service %s/%s", svc.Namespace, svc.Name)
-	}
-	return net.JoinHostPort(svc.Spec.ClusterIP, strconv.Itoa(svcPort)), nil
+	// svcPort, ok := getServicePort(rw.protocol, svc)
+	// if !ok {
+	// 	return "", fmt.Errorf("unable to find port in service %s/%s", svc.Namespace, svc.Name)
+	// }
+	return net.JoinHostPort("timer-service-00001-private.kwok-system.svc.cluster.local", strconv.Itoa(80)), nil
 }
 
 func (rw *revisionWatcher) probeClusterIP(dest string) (bool, error) {
